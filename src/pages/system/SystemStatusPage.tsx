@@ -109,9 +109,9 @@ export default function SystemStatusPage() {
     });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">System Status</h1>
           <p className="text-sm text-muted">Monitor platform health and service availability</p>
@@ -126,7 +126,7 @@ export default function SystemStatusPage() {
 
       {/* Overview cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-9 h-9 rounded-lg bg-success/10 flex items-center justify-center">
               <Activity className="w-4 h-4 text-success" />
@@ -137,7 +137,7 @@ export default function SystemStatusPage() {
           <p className="text-xs text-muted mt-1">Last 30 days</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center">
               <Gauge className="w-4 h-4 text-accent" />
@@ -148,7 +148,7 @@ export default function SystemStatusPage() {
           <p className="text-xs text-muted mt-1">Across all services</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-9 h-9 rounded-lg bg-warning/10 flex items-center justify-center">
               <AlertTriangle className="w-4 h-4 text-warning" />
@@ -161,9 +161,9 @@ export default function SystemStatusPage() {
       </div>
 
       {/* Maintenance mode */}
-      <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+      <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <Power className={cn("w-5 h-5", settings.maintenanceMode ? "text-warning" : "text-accent")} />
             <div>
               <h3 className="text-sm font-semibold text-heading">Maintenance Mode</h3>
@@ -203,7 +203,7 @@ export default function SystemStatusPage() {
           {SERVICE_STATUSES.map((svc) => (
             <div
               key={svc.name}
-              className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 space-y-3"
+              className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 space-y-3"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -243,7 +243,7 @@ export default function SystemStatusPage() {
               <div
                 key={log.id}
                 className={cn(
-                  "bg-white rounded-2xl border border-border-light/50 p-4 flex items-start gap-3",
+                  "bg-white rounded-2xl border border-border-light/50 p-4 flex items-start gap-4",
                   "border-l-4",
                   log.level === "warning" && "border-l-warning",
                   log.level === "error" && "border-l-danger",

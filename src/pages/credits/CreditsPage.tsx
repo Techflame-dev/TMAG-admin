@@ -41,16 +41,16 @@ export default function CreditsPage() {
   ];
 
   return (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="space-y-8 lg:space-y-10">
       <div>
         <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">Credit Ledger</h1>
         <p className="text-sm text-muted mt-0.5">Complete audit trail of all credit movements</p>
       </div>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {summaryCards.map((s) => (
-          <div key={s.label} className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div key={s.label} className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <div className="flex items-center gap-3.5">
               <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", s.bg)}>
                 <s.icon className={cn("w-5 h-5", s.color)} />
@@ -65,7 +65,7 @@ export default function CreditsPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
           <input

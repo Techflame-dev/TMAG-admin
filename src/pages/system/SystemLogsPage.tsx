@@ -78,7 +78,7 @@ export default function SystemLogsPage() {
     });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">System Logs</h1>
@@ -86,7 +86,7 @@ export default function SystemLogsPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         {/* Level tabs */}
         <div className="flex items-center gap-1 bg-background-secondary rounded-xl p-1">
           {LEVEL_TABS.map((tab) => (
@@ -139,7 +139,7 @@ export default function SystemLogsPage() {
                   levelBorderColor(log.level)
                 )}
               >
-                <div className="p-4 flex items-start gap-3">
+                <div className="p-4 flex items-start gap-4">
                   <div className="pt-0.5">{levelIcon(log.level)}</div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">

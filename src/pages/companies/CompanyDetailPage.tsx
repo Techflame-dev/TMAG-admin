@@ -115,7 +115,7 @@ export default function CompanyDetailPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Back Link */}
       <Link
         to="/admin/companies"
@@ -146,9 +146,9 @@ export default function CompanyDetailPage() {
 
       {/* ─── Overview Tab ─── */}
       {activeTab === "overview" && (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Profile Card */}
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="w-14 h-14 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
                 <Building2 className="w-7 h-7" />
@@ -222,7 +222,7 @@ export default function CompanyDetailPage() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
                 label: "Credits Purchased",
@@ -265,7 +265,7 @@ export default function CompanyDetailPage() {
           </div>
 
           {/* Contract Renewal */}
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <div className="flex items-center gap-2 mb-2">
               <CalendarClock className="w-4 h-4 text-brand-muted" />
               <h3 className="text-sm font-semibold text-heading">
@@ -284,7 +284,7 @@ export default function CompanyDetailPage() {
 
       {/* ─── Edit Tab ─── */}
       {activeTab === "edit" && (
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 max-w-2xl">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 max-w-2xl">
           <h2 className="text-lg font-serif font-bold text-heading mb-5">
             Edit Company
           </h2>
@@ -384,7 +384,7 @@ export default function CompanyDetailPage() {
       {activeTab === "credits" && (
         <div className="space-y-6 max-w-2xl">
           {/* Current Balance */}
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h2 className="text-lg font-serif font-bold text-heading mb-4">
               Current Balance
             </h2>
@@ -416,7 +416,7 @@ export default function CompanyDetailPage() {
           </div>
 
           {/* Add/Deduct Credits */}
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h2 className="text-lg font-serif font-bold text-heading mb-4">
               Adjust Credits
             </h2>
@@ -470,7 +470,7 @@ export default function CompanyDetailPage() {
 
       {/* ─── Ledger Tab ─── */}
       {activeTab === "ledger" && (
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
           <h2 className="text-lg font-serif font-bold text-heading mb-4">
             Credit Ledger ({companyLedger.length})
           </h2>
@@ -544,7 +544,7 @@ export default function CompanyDetailPage() {
 
       {/* ─── HR Admins Tab ─── */}
       {activeTab === "hr-admins" && (
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
           <h2 className="text-lg font-serif font-bold text-heading mb-4">
             HR Admins ({companyHrAdmins.length})
           </h2>
@@ -614,7 +614,7 @@ export default function CompanyDetailPage() {
 
       {/* ─── Employees Tab ─── */}
       {activeTab === "employees" && (
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
           <h2 className="text-lg font-serif font-bold text-heading mb-4">
             Employees ({companyUsers.length})
           </h2>
@@ -688,7 +688,7 @@ export default function CompanyDetailPage() {
 
       {/* ─── Plans Tab ─── */}
       {activeTab === "plans" && (
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
           <h2 className="text-lg font-serif font-bold text-heading mb-4">
             Generated Plans ({companyPlans.length})
           </h2>
@@ -771,7 +771,7 @@ export default function CompanyDetailPage() {
       )}
 
       {/* Action Buttons — visible on all tabs */}
-      <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+      <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
         <h3 className="text-sm font-semibold text-heading mb-4">Actions</h3>
         <div className="flex flex-wrap gap-2">
           {company.billingStatus === "frozen" ? (

@@ -9,21 +9,21 @@ export default function AbusePage() {
   const resolved = abuseFlags.filter((f) => f.resolved);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">Abuse Detection</h1>
         <p className="text-sm text-muted">Monitor and respond to platform abuse flags</p>
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "Total Flags", value: abuseFlags.length, icon: AlertTriangle, color: "text-warning bg-warning/10" },
           { label: "Unresolved", value: unresolved.length, icon: Clock, color: "text-danger bg-danger/10" },
           { label: "Resolved", value: resolved.length, icon: CheckCircle, color: "text-success bg-success/10" },
           { label: "High Severity", value: abuseFlags.filter((f) => f.severity === "high").length, icon: Shield, color: "text-danger bg-danger/10" },
         ].map((s) => (
-          <div key={s.label} className="bg-surface rounded-xl border border-border p-4 flex items-center gap-3">
+          <div key={s.label} className="bg-surface rounded-xl border border-border p-4 flex items-center gap-4">
             <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", s.color.split(" ")[1])}>
               <s.icon className={cn("w-5 h-5", s.color.split(" ")[0])} />
             </div>
@@ -43,7 +43,7 @@ export default function AbusePage() {
             const user = users.find((u) => u.id === flag.userId);
             return (
               <div key={flag.id} className="bg-surface rounded-xl border border-border p-4 lg:p-5">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <span className="font-medium text-heading">{flag.userName}</span>

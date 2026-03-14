@@ -51,7 +51,7 @@ export default function SystemSettingsPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">System Settings</h1>
@@ -59,7 +59,7 @@ export default function SystemSettingsPage() {
       </div>
 
       {/* Credit defaults */}
-      <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 space-y-4">
+      <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 space-y-4">
         <h3 className="text-sm font-semibold text-heading">Credit Defaults</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -88,7 +88,7 @@ export default function SystemSettingsPage() {
       </div>
 
       {/* AI configuration */}
-      <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 space-y-4">
+      <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 space-y-4">
         <h3 className="text-sm font-semibold text-heading">AI Configuration</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -119,7 +119,7 @@ export default function SystemSettingsPage() {
       </div>
 
       {/* Platform settings */}
-      <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 space-y-4">
+      <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 space-y-4">
         <h3 className="text-sm font-semibold text-heading">Platform Settings</h3>
 
         {/* Maintenance mode */}
@@ -183,7 +183,7 @@ export default function SystemSettingsPage() {
       </div>
 
       {/* Global disclaimer */}
-      <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 space-y-4">
+      <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 space-y-4">
         <h3 className="text-sm font-semibold text-heading">Global Disclaimer</h3>
         <textarea
           value={form.globalDisclaimer}
@@ -194,7 +194,7 @@ export default function SystemSettingsPage() {
       </div>
 
       {/* Save / Reset */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <button
           onClick={handleSave}
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-white rounded-xl text-sm font-medium hover:bg-accent/90 transition-colors duration-150"
@@ -211,7 +211,7 @@ export default function SystemSettingsPage() {
       </div>
 
       {/* Admin roles reference */}
-      <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 space-y-4">
+      <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 space-y-4">
         <h3 className="text-sm font-semibold text-heading">Admin Roles</h3>
         <p className="text-xs text-muted">
           Current role:{" "}
@@ -219,7 +219,7 @@ export default function SystemSettingsPage() {
             {admin?.role.replace(/_/g, " ")}
           </span>
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {roleConfig.map((r) => (
             <div
               key={r.role}

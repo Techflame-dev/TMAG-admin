@@ -44,7 +44,7 @@ function StatCard({
     bgColor?: string;
 }) {
     return (
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <div className="flex items-center gap-3.5">
                 <div
                     className={cn(
@@ -139,9 +139,9 @@ export default function Dashboard() {
         .slice(0, 4);
 
     return (
-        <div className="space-y-6 lg:space-y-8">
+        <div className="space-y-8 lg:space-y-10">
             {/* ── Page Header ─────────────────────────────────────── */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">
                         Dashboard
@@ -154,7 +154,7 @@ export default function Dashboard() {
             </div>
 
             {/* ── Stats Grid ──────────────────────────────────────── */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 <StatCard
                     label="Total Users"
                     value={stats.totalUsers.toLocaleString()}
@@ -214,7 +214,7 @@ export default function Dashboard() {
             {/* ── Charts Row ──────────────────────────────────────── */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Monthly Requests & Revenue */}
-                <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+                <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
                     <h3 className="text-sm font-serif font-bold text-heading mb-5 flex items-center gap-2">
                         <TrendingUp className="w-4 h-4 text-accent" />
                         Monthly Requests &amp; Revenue
@@ -270,7 +270,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Top Destinations */}
-                <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+                <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
                     <h3 className="text-sm font-serif font-bold text-heading mb-5 flex items-center gap-2">
                         <Globe className="w-4 h-4 text-accent" />
                         Top Destinations
@@ -315,7 +315,7 @@ export default function Dashboard() {
             </div>
 
             {/* ── Recent AI Requests Table ────────────────────────── */}
-            <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+            <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
                 <h3 className="text-sm font-serif font-bold text-heading mb-5 flex items-center gap-2">
                     <Activity className="w-4 h-4 text-accent" />
                     Recent AI Requests
@@ -396,13 +396,13 @@ export default function Dashboard() {
             </div>
 
             {/* ── Quick Glance ────────────────────────────────────── */}
-            <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+            <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
                 <h3 className="text-sm font-serif font-bold text-heading mb-5">
                     Quick Glance
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {/* Unresolved Abuse Flags */}
-                    <div className="bg-background-primary rounded-xl p-4 flex items-start gap-3">
+                    <div className="bg-background-primary rounded-xl p-4 flex items-start gap-4">
                         <div className="w-9 h-9 rounded-lg bg-danger/10 flex items-center justify-center shrink-0">
                             <ShieldAlert className="w-4.5 h-4.5 text-danger" />
                         </div>
@@ -417,7 +417,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Flagged Plans */}
-                    <div className="bg-background-primary rounded-xl p-4 flex items-start gap-3">
+                    <div className="bg-background-primary rounded-xl p-4 flex items-start gap-4">
                         <div className="w-9 h-9 rounded-lg bg-warning/10 flex items-center justify-center shrink-0">
                             <FileWarning className="w-4.5 h-4.5 text-warning" />
                         </div>

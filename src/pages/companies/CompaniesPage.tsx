@@ -54,10 +54,10 @@ export default function CompaniesPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-4">
           <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">
             Company Management
           </h1>
@@ -71,7 +71,7 @@ export default function CompaniesPage() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {summaryStats.map((s) => (
           <div
             key={s.label}
@@ -89,7 +89,7 @@ export default function CompaniesPage() {
       </div>
 
       {/* Search + Filter */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
           <input
@@ -130,11 +130,11 @@ export default function CompaniesPage() {
           return (
             <div
               key={company.id}
-              className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 space-y-4"
+              className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 space-y-4"
             >
               {/* Company Header */}
               <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
                     <Building2 className="w-5 h-5 text-accent" />
                   </div>

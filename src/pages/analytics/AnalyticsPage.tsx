@@ -75,7 +75,7 @@ export default function AnalyticsPage() {
   const planTypeData = Object.entries(planTypeRevenue).map(([name, value]) => ({ name, value }));
 
   return (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="space-y-8 lg:space-y-10">
       <div>
         <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">Analytics & Metrics</h1>
         <p className="text-sm text-muted mt-0.5">Usage patterns, trends, and platform insights</p>
@@ -100,15 +100,15 @@ export default function AnalyticsPage() {
 
       {/* Overview */}
       {activeTab === "overview" && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div className="space-y-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {[
               { label: "Avg Credits/User", value: analytics.avgCreditsPerUser.toFixed(1), icon: CreditCard, color: "text-accent", bg: "bg-accent/10" },
               { label: "Total Users", value: stats.totalUsers, icon: Users, color: "text-gold", bg: "bg-gold/10" },
               { label: "Corporate Credits", value: analytics.corporateVsIndividual.corporate, icon: BarChart3, color: "text-info", bg: "bg-info/10" },
               { label: "Individual Credits", value: analytics.corporateVsIndividual.individual, icon: DollarSign, color: "text-warning", bg: "bg-warning/10" },
             ].map((s) => (
-              <div key={s.label} className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+              <div key={s.label} className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
                 <div className="flex items-center gap-3.5">
                   <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", s.bg)}>
                     <s.icon className={cn("w-5 h-5", s.color)} />
@@ -122,7 +122,7 @@ export default function AnalyticsPage() {
             ))}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+            <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
               <h3 className="text-sm font-serif font-bold text-heading mb-5">Monthly Request Volume</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -136,7 +136,7 @@ export default function AnalyticsPage() {
                 </ResponsiveContainer>
               </div>
             </div>
-            <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+            <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
               <h3 className="text-sm font-serif font-bold text-heading mb-5">Corporate vs Individual</h3>
               <div className="h-64 flex items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
@@ -164,7 +164,7 @@ export default function AnalyticsPage() {
       {/* Usage */}
       {activeTab === "usage" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h3 className="text-sm font-serif font-bold text-heading mb-5">Peak Usage Hours</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -178,7 +178,7 @@ export default function AnalyticsPage() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h3 className="text-sm font-serif font-bold text-heading mb-5">Daily Active Users</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -192,7 +192,7 @@ export default function AnalyticsPage() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 lg:col-span-2">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 lg:col-span-2">
             <h3 className="text-sm font-serif font-bold text-heading mb-5">Requests per Model</h3>
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
@@ -212,7 +212,7 @@ export default function AnalyticsPage() {
       {/* Destinations */}
       {activeTab === "destinations" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h3 className="text-sm font-serif font-bold text-heading mb-5">Top Destinations</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -226,7 +226,7 @@ export default function AnalyticsPage() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h3 className="text-sm font-serif font-bold text-heading mb-5">Destination Risk Distribution</h3>
             <div className="h-72 flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
@@ -259,7 +259,7 @@ export default function AnalyticsPage() {
       {/* Credits */}
       {activeTab === "credits" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h3 className="text-sm font-serif font-bold text-heading mb-5">Credit Usage by Type</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -275,7 +275,7 @@ export default function AnalyticsPage() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h3 className="text-sm font-serif font-bold text-heading mb-5">Credit Consumption Trend</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -294,17 +294,17 @@ export default function AnalyticsPage() {
 
       {/* Revenue */}
       {activeTab === "revenue" && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
-            <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="space-y-8">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
               <p className="text-xs text-muted font-medium uppercase tracking-wide">Total Revenue</p>
               <p className="text-xl lg:text-2xl font-bold text-heading mt-1">₦{totalRevenue.toLocaleString()}</p>
             </div>
-            <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+            <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
               <p className="text-xs text-muted font-medium uppercase tracking-wide">Invoices Paid</p>
               <p className="text-xl lg:text-2xl font-bold text-success mt-1">{paidInvoices.length}</p>
             </div>
-            <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+            <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
               <p className="text-xs text-muted font-medium uppercase tracking-wide">Pending</p>
               <p className="text-xl lg:text-2xl font-bold text-warning mt-1">{invoices.filter((i) => i.status === "pending").length}</p>
             </div>
@@ -323,7 +323,7 @@ export default function AnalyticsPage() {
               </button>
             ))}
           </div>
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             {selectedRevTab === "monthly" && (
               <>
                 <h3 className="text-sm font-serif font-bold text-heading mb-5">Monthly Revenue</h3>

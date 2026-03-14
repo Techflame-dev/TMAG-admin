@@ -93,7 +93,7 @@ export default function UserDetailPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Back Link */}
       <Link
         to="/admin/users"
@@ -124,9 +124,9 @@ export default function UserDetailPage() {
 
       {/* Tab Content */}
       {activeTab === "overview" && (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Profile Card */}
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="w-14 h-14 rounded-full bg-accent/10 text-accent flex items-center justify-center text-xl font-bold font-serif shrink-0">
                 {user.name.charAt(0)}
@@ -185,7 +185,7 @@ export default function UserDetailPage() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
                 label: "Credits Remaining",
@@ -252,7 +252,7 @@ export default function UserDetailPage() {
       )}
 
       {activeTab === "edit" && (
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 max-w-2xl">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 max-w-2xl">
           <h2 className="text-lg font-serif font-bold text-heading mb-5">Edit User</h2>
           <div className="space-y-4">
             <div>
@@ -316,7 +316,7 @@ export default function UserDetailPage() {
       {activeTab === "credits" && (
         <div className="space-y-6 max-w-2xl">
           {/* Current Credits */}
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h2 className="text-lg font-serif font-bold text-heading mb-4">Current Credits</h2>
             <div className="flex items-center gap-6">
               <div>
@@ -339,7 +339,7 @@ export default function UserDetailPage() {
           </div>
 
           {/* Add/Deduct Credits */}
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h2 className="text-lg font-serif font-bold text-heading mb-4">
               Adjust Credits
             </h2>
@@ -387,7 +387,7 @@ export default function UserDetailPage() {
           </div>
 
           {/* Recent Credit Movements */}
-          <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+          <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             <h2 className="text-lg font-serif font-bold text-heading mb-4">
               Recent Credit Movements
             </h2>
@@ -400,7 +400,7 @@ export default function UserDetailPage() {
                     key={entry.id}
                     className="flex items-center justify-between py-2 border-b border-border-light last:border-0"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       {entry.amount > 0 ? (
                         <TrendingUp className="w-4 h-4 text-success" />
                       ) : (
@@ -431,7 +431,7 @@ export default function UserDetailPage() {
       )}
 
       {activeTab === "ledger" && (
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
           <h2 className="text-lg font-serif font-bold text-heading mb-4">
             Credit Ledger ({userLedger.length})
           </h2>
@@ -490,7 +490,7 @@ export default function UserDetailPage() {
       )}
 
       {activeTab === "plans" && (
-        <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+        <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
           <h2 className="text-lg font-serif font-bold text-heading mb-4">
             Generated Plans ({userPlans.length})
           </h2>
@@ -568,7 +568,7 @@ export default function UserDetailPage() {
       )}
 
       {/* Action Buttons — visible on all tabs */}
-      <div className="bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6">
+      <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
         <h3 className="text-sm font-semibold text-heading mb-4">Actions</h3>
         <div className="flex flex-wrap gap-2">
           {user.status === "active" ? (

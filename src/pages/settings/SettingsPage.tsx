@@ -27,7 +27,7 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">System Settings</h1>
         <p className="text-sm text-muted">Configure platform defaults and system behavior</p>
@@ -99,7 +99,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Save/reset */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <button
           onClick={handleSave}
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent/90"
@@ -119,7 +119,7 @@ export default function SettingsPage() {
       <div className="bg-surface rounded-xl border border-border p-5 space-y-4">
         <h3 className="text-sm font-semibold text-heading">Admin Roles</h3>
         <p className="text-xs text-muted">Current role: <span className="font-semibold text-heading capitalize">{admin?.role.replace(/_/g, " ")}</span></p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {roleConfig.map((r) => (
             <div key={r.role} className={cn("rounded-xl border p-4", admin?.role === r.role ? "border-accent bg-accent/5" : "border-border")}>
               <div className="flex items-center gap-2 mb-2">

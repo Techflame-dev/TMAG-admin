@@ -13,7 +13,7 @@ export default function RolesPage() {
   const roleUsers = detail ? adminUsers.filter((u) => u.role === detail.name.toLowerCase().replace(/ /g, "_")) : [];
 
   return (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="space-y-8 lg:space-y-10">
       <div>
         <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">Admin Roles</h1>
         <p className="text-sm text-muted mt-0.5">Manage roles and permissions for admin users</p>
@@ -26,7 +26,7 @@ export default function RolesPage() {
             key={role.id}
             onClick={() => setSelected(role.id)}
             className={cn(
-              "bg-white rounded-2xl border border-border-light/50 p-5 lg:p-6 text-left transition-colors hover:bg-background-primary",
+              "bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 text-left transition-colors hover:bg-background-primary",
               selected === role.id && "ring-2 ring-accent/30"
             )}
           >
