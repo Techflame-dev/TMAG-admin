@@ -27,7 +27,7 @@ export default function LoginPage() {
         try {
             const response = await adminApi.login({ email, password });
             const { token, exp, user } = response.data.data;
-            
+
             setAuthCookie(token, exp);
             login({
                 id: String(user.id),
