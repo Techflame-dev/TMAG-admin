@@ -12,6 +12,7 @@ import {
   ChevronDown,
   X,
 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
 import { cn } from "../../lib/utils";
 import {
   useCompanies,
@@ -45,9 +46,11 @@ export default function CreditsPage() {
   const quoteMutation = useCompanyCreditQuote();
   const initiateMutation = useInitiateCompanyCreditPurchase();
   const verifyMutation = useVerifyCompanyCreditPurchase();
-  const { data: purchaseHistory } = useCompanyCreditHistory(
-    showHistory ? selectedCompanyId : undefined
-  );
+  const {
+    data: purchaseHistory,
+    isLoading: historyLoading,
+    isFetching: historyFetching,
+  } = useCompanyCreditHistory(selectedCompanyId || undefined);
 
   const selectedCompany = companies.find((c) => c.id === selectedCompanyId);
 
@@ -158,28 +161,30 @@ export default function CreditsPage() {
 
   return (
     <div className="space-y-8 lg:space-y-10">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">
-            Company Credit Purchase
-          </h1>
-          <p className="text-sm text-muted mt-0.5">
-            Purchase credits for companies at their billing currency rates
-          </p>
-        </div>
-        <button
-          onClick={() => setShowHistory(!showHistory)}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors",
-            showHistory
-              ? "bg-accent text-white"
-              : "bg-button-secondary border border-border text-heading hover:bg-background-secondary"
-          )}
-        >
-          <History className="w-4 h-4" />
-          History
-        </button>
-      </div>
+      <PageHeader
+        title="Company credit purchase"
+        description="Purchase credits for companies at their billing currency rates."
+        actions={
+          <button
+            type="button"
+            disabled={!selectedCompanyId}
+            onClick={() => setShowHistory((v) => !v)}
+            title={
+              selectedCompanyId ? undefined : "Select a company to view purchase history"
+            }
+            className={cn(
+              "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors duration-150",
+              !selectedCompanyId && "opacity-50 cursor-not-allowed",
+              showHistory && selectedCompanyId
+                ? "bg-accent text-white"
+                : "bg-button-secondary border border-border-light text-heading hover:bg-background-secondary",
+            )}
+          >
+            <History className="w-4 h-4" />
+            {showHistory && selectedCompanyId ? "Hide history" : "Show history"}
+          </button>
+        }
+      />
 
       {/* Payment Status Banner */}
       {step === "success" && (
@@ -265,6 +270,7 @@ export default function CreditsPage() {
                             key={c.id}
                             onClick={() => {
                               setSelectedCompanyId(c.id);
+                              setShowHistory(true);
                               setDropdownOpen(false);
                               setQuote(null);
                               setStep("select");
@@ -375,7 +381,7 @@ export default function CreditsPage() {
                             {discountLabel}
                           </span>
                         )}
-                        <span className="text-2xl font-serif font-bold text-heading block">
+                        <span className="text-2xl font-serif text-heading block">
                           {qty}
                         </span>
                         <span className="text-xs text-muted">credits</span>
@@ -533,7 +539,7 @@ export default function CreditsPage() {
                   <div className="border-t border-border pt-3 flex justify-between">
                     <span className="text-heading font-semibold">Total</span>
                     <div className="text-right">
-                      <span className="text-xl font-serif font-bold text-heading">
+                      <span className="text-xl font-serif text-heading">
                         {quote.currencySymbol}
                         {quote.totalAmount.toLocaleString()}
                       </span>
@@ -581,16 +587,23 @@ export default function CreditsPage() {
         </div>
       )}
 
-      {/* Purchase History */}
-      {showHistory && (
+      {/* Purchase history for selected company (loads as soon as a company is chosen) */}
+      {selectedCompanyId && showHistory && (
         <div className="bg-white rounded-2xl border border-border-light/50 overflow-hidden">
           <div className="px-6 py-4 border-b border-border-light/50 flex items-center justify-between">
-            <h2 className="text-base font-semibold text-heading">
-              Purchase History
-            </h2>
+            <div>
+              <h2 className="text-base font-semibold text-heading">
+                Credit purchase history
+              </h2>
+              <p className="text-xs text-muted mt-0.5">
+                {selectedCompany?.name ?? "Selected company"}
+              </p>
+            </div>
             <button
+              type="button"
               onClick={() => setShowHistory(false)}
               className="text-muted hover:text-heading"
+              aria-label="Hide purchase history"
             >
               <X className="w-4 h-4" />
             </button>
@@ -623,24 +636,31 @@ export default function CreditsPage() {
                 </tr>
               </thead>
               <tbody>
-                {!purchaseHistory || purchaseHistory.length === 0 ? (
+                {historyLoading || historyFetching ? (
                   <tr>
                     <td colSpan={7} className="p-8 text-center text-muted">
-                      No purchase history found
+                      <Loader2 className="w-6 h-6 animate-spin text-accent inline-block mr-2 align-middle" />
+                      Loading transactions…
+                    </td>
+                  </tr>
+                ) : !purchaseHistory || purchaseHistory.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="p-8 text-center text-muted">
+                      No purchase history found for this company
                     </td>
                   </tr>
                 ) : (
                   (purchaseHistory as CompanyCreditPurchase[]).map(
                     (purchase) => (
                       <tr
-                        key={purchase.id}
+                        key={String(purchase.id)}
                         className="border-b border-border-light/50 last:border-0"
                       >
                         <td className="p-4 text-muted text-xs whitespace-nowrap">
                           {new Date(purchase.createdAt).toLocaleString()}
                         </td>
                         <td className="p-4 text-heading font-medium text-xs">
-                          Company #{purchase.companyId}
+                          {selectedCompany?.name ?? `Company #${purchase.companyId}`}
                         </td>
                         <td className="p-4 text-heading font-bold">
                           +{purchase.creditsPurchased}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import { useAdminAuthStore } from "../../stores/adminAuthStore";
 import { adminApi } from "../../api/api";
@@ -51,23 +51,19 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen bg-background-primary flex flex-col">
-            {/* Gold accent strip at top */}
-            <div className="h-1 bg-gradient-to-r from-gold/80 via-gold to-gold/80" />
-
-            <div className="flex-1 flex items-center justify-center px-6 pb-16">
+            <div className="flex-1 flex items-center justify-center px-6 py-16">
                 <div className="w-full max-w-md">
-                    <div className="flex items-center gap-2 mb-8">
-                        <div className="w-9 h-9 rounded-lg bg-darkest flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">TM</span>
-                        </div>
-                        <div>
-                            <p className="text-heading text-sm font-semibold leading-tight">TMAG</p>
-                            <p className="text-gold text-[10px] font-semibold leading-tight uppercase tracking-widest">Admin Portal</p>
-                        </div>
-                    </div>
+                    <Link to="/admin" className="inline-block mb-8">
+                        <span className="text-xl font-serif font-medium tracking-tight text-heading">
+                            TMAG
+                        </span>
+                        <span className="block text-[10px] text-muted uppercase tracking-widest mt-1">
+                            Admin
+                        </span>
+                    </Link>
 
-                    <h1 className="text-3xl md:text-4xl font-serif text-heading mb-2 pl-4 border-l-[3px] border-gold/60">
-                        Admin Sign In
+                    <h1 className="text-3xl md:text-4xl font-serif text-heading mb-2">
+                        Admin sign in
                     </h1>
                     <p className="text-sm text-body mb-8">
                         Access the admin dashboard to manage the platform.

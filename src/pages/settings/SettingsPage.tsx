@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Save, RotateCcw, Shield, UserCog, HeadphonesIcon } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
 import { cn } from "../../lib/utils";
 import { useSystemSettings, useUpdateSystemSettings } from "../../api/hooks";
 import { useAdminAuthStore } from "../../stores/adminAuthStore";
@@ -14,6 +15,10 @@ const defaultSettings: SystemSettings = {
   maintenanceMode: false,
   emailNotifications: true,
   maxEmployeesPerCompany: 100,
+  revenueBaseCurrency: "USD",
+  exchangeRateNGN: 1,
+  exchangeRateEUR: 1,
+  exchangeRateGBP: 1,
 };
 
 export default function SettingsPage() {
@@ -57,10 +62,10 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">System Settings</h1>
-        <p className="text-sm text-muted">Configure platform defaults and system behavior</p>
-      </div>
+      <PageHeader
+        title="System settings"
+        description="Configure platform defaults and system behavior."
+      />
 
       {/* Credit defaults */}
       <div className="bg-surface rounded-xl border border-border p-5 space-y-4">

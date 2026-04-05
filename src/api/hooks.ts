@@ -51,6 +51,7 @@ export const queryKeys = {
     ["admin", "company-credits", "pricing", companyId] as const,
   companyCreditHistory: (companyId?: string) =>
     ["admin", "company-credits", "history", companyId] as const,
+  planContexts: ["admin", "plan-contexts"] as const,
 };
 
 const extractData = <T>(response: { data: { data: T } }): T => {
@@ -446,6 +447,46 @@ export const useFlagPlan = () => {
   });
 };
 
+export const usePlanContexts = () => {
+  return useQuery({
+    queryKey: queryKeys.planContexts,
+    queryFn: async () => {
+      const response = await adminApi.getPlanContexts();
+      return extractData(response);
+    },
+  });
+};
+
+export const useUploadPlanContext = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ title, file }: { title: string; file: File }) => adminApi.uploadPlanContext(title, file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.planContexts });
+    },
+  });
+};
+
+export const useSetPlanContextActive = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, active }: { id: string; active: boolean }) => adminApi.setPlanContextActive(id, active),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.planContexts });
+    },
+  });
+};
+
+export const useDeletePlanContext = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => adminApi.deletePlanContext(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.planContexts });
+    },
+  });
+};
+
 export const useAnalytics = () => {
   return useQuery({
     queryKey: queryKeys.analytics,
@@ -675,5 +716,6 @@ export const useCompanyCreditHistory = (companyId?: string) => {
       const response = await adminApi.getCompanyCreditHistory(companyId);
       return response.data.data;
     },
+    enabled: !!companyId,
   });
 };

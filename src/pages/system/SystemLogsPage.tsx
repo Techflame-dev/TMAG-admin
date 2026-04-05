@@ -9,6 +9,7 @@ import {
   Clock,
   LucideLoader2,
 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
 import { cn } from "../../lib/utils";
 import { useSystemLogs } from "../../api/hooks";
 import type { SystemLog } from "../../api/types";
@@ -91,10 +92,10 @@ export default function SystemLogsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">System Logs</h1>
-        <p className="text-sm text-muted">View and filter platform event logs</p>
-      </div>
+      <PageHeader
+        title="System Logs"
+        description="View and filter platform event logs."
+      />
 
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex items-center gap-1 bg-background-secondary rounded-xl p-1">
@@ -115,13 +116,13 @@ export default function SystemLogsPage() {
         </div>
 
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted pointer-events-none" />
           <input
             type="text"
             placeholder="Search message or source…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-white border border-border-light rounded-xl text-sm text-heading placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/30"
+            className="w-full pl-9 pr-3 py-2 bg-button-secondary border border-border-light rounded-xl text-sm text-heading placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/30"
           />
         </div>
 

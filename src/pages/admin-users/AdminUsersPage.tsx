@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Search, Eye, X, UserCog, UserCheck, UserX, LucideLoader2, Plus, Pencil, Trash2 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
+import StatCard from "../../components/StatCard";
 import { cn } from "../../lib/utils";
 import { useAdminUsers, useCreateAdminUser, useUpdateAdminUser, useDeleteAdminUser } from "../../api/hooks";
 import type { AdminUser } from "../../api/types";
@@ -46,9 +48,24 @@ export default function AdminUsersPage() {
   };
 
   const summaryCards = [
-    { label: "Total Admins", value: adminUsers.length, icon: UserCog, color: "text-accent", bg: "bg-accent/10" },
-    { label: "Active", value: adminUsers.filter((u) => u.status === "active").length, icon: UserCheck, color: "text-success", bg: "bg-success/10" },
-    { label: "Inactive", value: adminUsers.filter((u) => u.status === "inactive").length, icon: UserX, color: "text-danger", bg: "bg-danger/10" },
+    {
+      label: "Total Admins",
+      value: adminUsers.length,
+      icon: <UserCog className="w-4 h-4" />,
+      iconClassName: "bg-accent/10 text-accent",
+    },
+    {
+      label: "Active",
+      value: adminUsers.filter((u) => u.status === "active").length,
+      icon: <UserCheck className="w-4 h-4" />,
+      iconClassName: "bg-success/10 text-success",
+    },
+    {
+      label: "Inactive",
+      value: adminUsers.filter((u) => u.status === "inactive").length,
+      icon: <UserX className="w-4 h-4" />,
+      iconClassName: "bg-danger/10 text-danger",
+    },
   ];
 
   if (isLoading) {
@@ -61,43 +78,43 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-8 lg:space-y-10">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">Admin Users</h1>
-          <p className="text-sm text-muted mt-0.5">Manage administrator accounts and access</p>
-        </div>
-        <button
-          onClick={() => { setAdminForm(emptyAdminForm); setShowCreate(true); }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-xl text-sm font-medium hover:bg-accent/90 transition-colors duration-150"
-        >
-          <Plus className="w-4 h-4" /> Add Admin
-        </button>
-      </div>
+      <PageHeader
+        title="Admin users"
+        description="Manage administrator accounts and access."
+        actions={
+          <button
+            type="button"
+            onClick={() => {
+              setAdminForm(emptyAdminForm);
+              setShowCreate(true);
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-dark text-background-primary rounded-xl text-sm font-semibold hover:bg-darkest transition-colors duration-200"
+          >
+            <Plus className="w-4 h-4" /> Add admin
+          </button>
+        }
+      />
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
         {summaryCards.map((s) => (
-          <div key={s.label} className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <div className="flex items-center gap-3.5">
-              <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", s.bg)}>
-                <s.icon className={cn("w-5 h-5", s.color)} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs text-muted font-medium uppercase tracking-wide truncate">{s.label}</p>
-                <p className="text-xl lg:text-2xl font-bold text-heading leading-tight">{s.value}</p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            key={s.label}
+            label={s.label}
+            value={s.value}
+            icon={s.icon}
+            iconClassName={s.iconClassName}
+          />
         ))}
       </div>
 
       <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted pointer-events-none" />
         <input
           type="text"
           placeholder="Search by name or email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-4 py-2 bg-background-primary border border-border rounded-xl text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
+          className="w-full pl-9 pr-4 py-2 bg-button-secondary border border-border-light rounded-xl text-sm text-heading placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/30"
         />
       </div>
 
@@ -183,7 +200,7 @@ export default function AdminUsersPage() {
         >
           <div className="bg-white rounded-2xl border border-border-light/50 w-full max-w-md p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-serif font-bold text-heading">{editTarget ? "Edit Admin User" : "Add Admin User"}</h2>
+              <h2 className="text-base font-semibold text-heading">{editTarget ? "Edit Admin User" : "Add Admin User"}</h2>
               <button onClick={() => { setShowCreate(false); setEditTarget(null); }} className="text-muted hover:text-heading"><X className="w-5 h-5" /></button>
             </div>
             <div className="space-y-3">
@@ -243,7 +260,7 @@ export default function AdminUsersPage() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={closeDetail}>
           <div className="bg-white rounded-2xl border border-border-light/50 w-full max-w-lg max-h-[80vh] overflow-y-auto p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-serif font-bold text-heading">Admin Detail</h2>
+              <h2 className="text-base font-semibold text-heading">Admin Detail</h2>
               <button onClick={closeDetail} className="text-muted hover:text-heading"><X className="w-5 h-5" /></button>
             </div>
             <div className="space-y-3 text-sm">

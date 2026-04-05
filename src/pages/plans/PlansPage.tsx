@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Search, Filter, Eye, Flag, Archive, Trash2, X, FileText, ShieldAlert, AlertTriangle, CheckCircle, LucideLoader2 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
+import StatCard from "../../components/StatCard";
 import { cn } from "../../lib/utils";
 import { useGeneratedPlans, useFlagPlan, useArchivePlan, useDeletePlan } from "../../api/hooks";
 import type { GeneratedPlan } from "../../api/types";
@@ -39,11 +41,42 @@ export default function PlansPage() {
   };
 
   const summaryCards = [
-    { label: "Total Plans", value: plans.length, icon: FileText, color: "text-accent", bg: "bg-accent/10" },
-    { label: "Active", value: plans.filter((p) => p.status === "active").length, icon: CheckCircle, color: "text-success", bg: "bg-success/10" },
-    { label: "Flagged", value: plans.filter((p) => p.status === "flagged").length, icon: AlertTriangle, color: "text-warning", bg: "bg-warning/10" },
-    { label: "Archived", value: plans.filter((p) => p.status === "archived").length, icon: Archive, color: "text-info", bg: "bg-info/10" },
-    { label: "High Risk", value: plans.filter((p) => p.riskScore >= 60).length, icon: ShieldAlert, color: "text-danger", bg: "bg-danger/10" },
+    {
+      label: "Total Plans",
+      value: plans.length,
+      icon: <FileText className="w-4 h-4" />,
+      iconClassName: "bg-accent/10 text-accent",
+    },
+    {
+      label: "Active",
+      value: plans.filter((p) => p.status === "active").length,
+      icon: <CheckCircle className="w-4 h-4" />,
+      iconClassName: "bg-success/10 text-success",
+    },
+    {
+      label: "Flagged",
+      value: plans.filter((p) => p.status === "flagged").length,
+      icon: <AlertTriangle className="w-4 h-4" />,
+      iconClassName: "bg-warning/10 text-warning",
+    },
+    {
+      label: "Archived",
+      value: plans.filter((p) => p.status === "archived").length,
+      icon: <Archive className="w-4 h-4" />,
+      iconClassName: "bg-info/10 text-info",
+    },
+    {
+      label: "Processing",
+      value: plans.filter((p) => p.status === "processing").length,
+      icon: <LucideLoader2 className="w-4 h-4" />,
+      iconClassName: "bg-accent/10 text-accent",
+    },
+    {
+      label: "High Risk",
+      value: plans.filter((p) => p.riskScore >= 60).length,
+      icon: <ShieldAlert className="w-4 h-4" />,
+      iconClassName: "bg-danger/10 text-danger",
+    },
   ];
 
   if (isLoading) {
@@ -56,41 +89,37 @@ export default function PlansPage() {
 
   return (
     <div className="space-y-8 lg:space-y-10">
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">Generated Plans</h1>
-        <p className="text-sm text-muted mt-0.5">Review, flag, or manage AI-generated travel health plans</p>
-      </div>
+      <PageHeader
+        title="User-generated plans"
+        description="Plans are created from the client dashboard (and HR create-plan). This view is read-only oversight: review, flag, archive, or remove records."
+      />
 
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 lg:gap-6">
         {summaryCards.map((s) => (
-          <div key={s.label} className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <div className="flex items-center gap-3.5">
-              <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", s.bg)}>
-                <s.icon className={cn("w-5 h-5", s.color)} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs text-muted font-medium uppercase tracking-wide truncate">{s.label}</p>
-                <p className="text-xl lg:text-2xl font-bold text-heading leading-tight">{s.value}</p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            key={s.label}
+            label={s.label}
+            value={s.value}
+            icon={s.icon}
+            iconClassName={s.iconClassName}
+          />
         ))}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted pointer-events-none" />
           <input
             type="text"
             placeholder="Search plans..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-background-primary border border-border rounded-xl text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
+            className="w-full pl-9 pr-4 py-2 bg-button-secondary border border-border-light rounded-xl text-sm text-heading placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/30"
           />
         </div>
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-muted" />
-          {(["all", "active", "flagged", "archived"] as const).map((f) => (
+          {(["all", "active", "processing", "failed", "flagged", "archived"] as const).map((f) => (
             <button
               key={f}
               onClick={() => setStatusFilter(f)}
@@ -140,6 +169,8 @@ export default function PlansPage() {
                   <span className={cn(
                     "px-2.5 py-0.5 rounded-xl text-xs font-medium capitalize",
                     plan.status === "active" && "bg-success/10 text-success",
+                    plan.status === "processing" && "bg-accent/10 text-accent",
+                    plan.status === "failed" && "bg-danger/10 text-danger",
                     plan.status === "flagged" && "bg-warning/10 text-warning",
                     plan.status === "archived" && "bg-info/10 text-info"
                   )}>
@@ -199,7 +230,7 @@ export default function PlansPage() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={closeDetail}>
           <div className="bg-white rounded-2xl border border-border-light/50 w-full max-w-lg max-h-[80vh] overflow-y-auto p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-serif font-bold text-heading">Plan Detail</h2>
+              <h2 className="text-base font-semibold text-heading">Plan Detail</h2>
               <button onClick={closeDetail} className="text-muted hover:text-heading"><X className="w-5 h-5" /></button>
             </div>
             <div className="space-y-3 text-sm">

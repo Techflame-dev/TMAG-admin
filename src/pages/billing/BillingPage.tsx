@@ -1,20 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Search, DollarSign, Clock, AlertTriangle, RotateCcw, Eye, X, LucideLoader2 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
+import StatCard from "../../components/StatCard";
 import { cn } from "../../lib/utils";
-import { useInvoices } from "../../api/hooks";
+import { useDashboardStats, useInvoices } from "../../api/hooks";
 import type { Invoice } from "../../api/types";
-
-const CURRENCY_SYMBOLS: Record<string, string> = {
-    NGN: "₦",
-    USD: "$",
-    EUR: "€",
-    GBP: "£",
-};
-
-function getCurrencySymbol(currency: string | undefined) {
-    return CURRENCY_SYMBOLS[currency ?? "NGN"] ?? "₦";
-}
+import { getCurrencySymbol, sumInvoicesByCurrency } from "../../lib/currency";
 
 type StatusFilter = "all" | "paid" | "pending" | "overdue" | "refunded";
 
@@ -26,6 +18,7 @@ export default function BillingPage() {
     const [selected, setSelected] = useState<string | null>(null);
 
     const { data: invoicesData, isLoading } = useInvoices();
+    const { data: dashboardStats } = useDashboardStats();
     const invoices: Invoice[] = invoicesData ?? [];
 
     useEffect(() => {
@@ -48,16 +41,74 @@ export default function BillingPage() {
         if (invoiceId) navigate("/admin/billing");
     };
 
-    const totalRevenue = invoices.filter((i) => i.status === "paid").reduce((s, i) => s + i.amount, 0);
-    const pendingAmount = invoices.filter((i) => i.status === "pending").reduce((s, i) => s + i.amount, 0);
-    const overdueAmount = invoices.filter((i) => i.status === "overdue").reduce((s, i) => s + i.amount, 0);
-    const refundedAmount = invoices.filter((i) => i.status === "refunded").reduce((s, i) => s + i.amount, 0);
+    const paidInvoices = invoices.filter((i) => i.status === "paid");
+    const pendingInvoices = invoices.filter((i) => i.status === "pending");
+    const overdueInvoices = invoices.filter((i) => i.status === "overdue");
+    const refundedInvoices = invoices.filter((i) => i.status === "refunded");
+
+    const paidByCurrency = sumInvoicesByCurrency(paidInvoices);
+    const pendingByCurrency = sumInvoicesByCurrency(pendingInvoices);
+    const overdueByCurrency = sumInvoicesByCurrency(overdueInvoices);
+    const refundedByCurrency = sumInvoicesByCurrency(refundedInvoices);
+
+    const baseCur = dashboardStats?.revenueBaseCurrency ?? "USD";
+    const revSym = getCurrencySymbol(baseCur);
+    const reportingPaid =
+        dashboardStats?.revenueOverview != null ?
+            `${revSym}${dashboardStats.revenueOverview.toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+        :   null;
+
+    function breakdownValue(m: Map<string, number>) {
+        if (m.size === 0) {
+            return "—";
+        }
+        return (
+            <div className="flex flex-col gap-1 text-xl sm:text-2xl font-bold leading-tight font-serif">
+                {Array.from(m.entries())
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([c, total]) => (
+                        <span key={c} className="tabular-nums text-heading">
+                            {getCurrencySymbol(c)}
+                            {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                            <span className="text-sm font-normal text-muted ml-1.5">{c}</span>
+                        </span>
+                    ))}
+            </div>
+        );
+    }
 
     const summaryCards = [
-        { label: "Total Revenue", value: `₦${totalRevenue.toLocaleString()}`, icon: DollarSign, color: "text-success", bg: "bg-success/10" },
-        { label: "Pending", value: `₦${pendingAmount.toLocaleString()}`, icon: Clock, color: "text-warning", bg: "bg-warning/10" },
-        { label: "Overdue", value: `₦${overdueAmount.toLocaleString()}`, icon: AlertTriangle, color: "text-danger", bg: "bg-danger/10" },
-        { label: "Refunded", value: `₦${refundedAmount.toLocaleString()}`, icon: RotateCcw, color: "text-info", bg: "bg-info/10" },
+        {
+            label: "Total revenue (paid)",
+            value: breakdownValue(paidByCurrency),
+            detail:
+                reportingPaid ?
+                    <>Reporting total ({baseCur}): {reportingPaid}</>
+                :   "Set exchange rates in System settings for a single reporting total.",
+            icon: <DollarSign className="w-4 h-4" />,
+            iconClassName: "bg-success/10 text-success",
+        },
+        {
+            label: "Pending",
+            value: breakdownValue(pendingByCurrency),
+            detail: "Shown in original invoice currencies",
+            icon: <Clock className="w-4 h-4" />,
+            iconClassName: "bg-warning/10 text-warning",
+        },
+        {
+            label: "Overdue",
+            value: breakdownValue(overdueByCurrency),
+            detail: "Shown in original invoice currencies",
+            icon: <AlertTriangle className="w-4 h-4" />,
+            iconClassName: "bg-danger/10 text-danger",
+        },
+        {
+            label: "Refunded",
+            value: breakdownValue(refundedByCurrency),
+            detail: "Shown in original invoice currencies",
+            icon: <RotateCcw className="w-4 h-4" />,
+            iconClassName: "bg-info/10 text-info",
+        },
     ];
 
     const statusColors: Record<string, string> = {
@@ -69,38 +120,33 @@ export default function BillingPage() {
 
     return (
         <div className="space-y-8 lg:space-y-10">
-            <div>
-                <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">Billing & Invoices</h1>
-                <p className="text-sm text-muted mt-0.5">Manage invoices and track payments</p>
-            </div>
+            <PageHeader
+                title="Billing & Invoices"
+                description="Manage invoices and track payments."
+            />
 
-            {/* Summary */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 {summaryCards.map((s) => (
-                    <div key={s.label} className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-                        <div className="flex items-center gap-3.5">
-                            <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", s.bg)}>
-                                <s.icon className={cn("w-5 h-5", s.color)} />
-                            </div>
-                            <div className="min-w-0">
-                                <p className="text-xs text-muted font-medium uppercase tracking-wide truncate">{s.label}</p>
-                                <p className="text-xl lg:text-2xl font-bold text-heading leading-tight">{s.value}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <StatCard
+                        key={s.label}
+                        label={s.label}
+                        value={s.value}
+                        icon={s.icon}
+                        iconClassName={s.iconClassName}
+                    />
                 ))}
             </div>
 
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1 max-w-sm">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted pointer-events-none" />
                     <input
                         type="text"
                         placeholder="Search by company, user or invoice ID..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2 bg-background-primary border border-border rounded-xl text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
+                        className="w-full pl-9 pr-4 py-2 bg-button-secondary border border-border-light rounded-xl text-sm text-heading placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/30"
                     />
                 </div>
                 <div className="flex items-center gap-2 overflow-x-auto">
@@ -180,7 +226,7 @@ export default function BillingPage() {
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={closeDetail}>
                     <div className="bg-white rounded-2xl border border-border-light/50 w-full max-w-lg max-h-[80vh] overflow-y-auto p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-serif font-bold text-heading">Invoice Detail</h2>
+                            <h2 className="text-base font-semibold text-heading">Invoice Detail</h2>
                             <button onClick={closeDetail} className="text-muted hover:text-heading"><X className="w-5 h-5" /></button>
                         </div>
                         <div className="space-y-3 text-sm">

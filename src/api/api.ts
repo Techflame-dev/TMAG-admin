@@ -23,6 +23,7 @@ import type {
   CompanyCreditQuote,
   CompanyCreditPurchase,
   InitiatePurchaseResponse,
+  PlanGenerationContext,
 } from "./types";
 
 export const adminApi = {
@@ -82,6 +83,20 @@ export const adminApi = {
   deletePlan: (id: string) => api.delete(`/admin/plans/${id}`),
   archivePlan: (id: string) => api.post(`/admin/plans/${id}/archive`),
   flagPlan: (id: string) => api.post(`/admin/plans/${id}/flag`),
+
+  // Plan Contexts - /admin/plan-contexts/*
+  getPlanContexts: () => api.get<ApiResponse<PlanGenerationContext[]>>("/admin/plan-contexts"),
+  uploadPlanContext: (title: string, file: File) => {
+    const data = new FormData();
+    data.append("title", title);
+    data.append("file", file);
+    return api.post<ApiResponse<PlanGenerationContext>>("/admin/plan-contexts", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+  setPlanContextActive: (id: string, active: boolean) =>
+    api.put<ApiResponse<PlanGenerationContext>>(`/admin/plan-contexts/${id}/active`, null, { params: { active } }),
+  deletePlanContext: (id: string) => api.delete(`/admin/plan-contexts/${id}`),
 
   // Analytics - /admin/analytics/*
   getAnalytics: () => api.get<ApiResponse<AnalyticsData>>("/admin/analytics"),

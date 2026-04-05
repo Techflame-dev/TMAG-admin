@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Search, Eye, X, Activity, CheckCircle, XCircle, AlertTriangle, LucideLoader2 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
+import StatCard from "../../components/StatCard";
 import { cn } from "../../lib/utils";
 import { useAILogs } from "../../api/hooks";
 import type { AIRequestLog } from "../../api/types";
@@ -49,10 +51,30 @@ export default function AILogsPage() {
   const detail = selected ? aiLogs.find((l) => l.id === selected) : null;
 
   const summaryCards = [
-    { label: "Total Requests", value: aiLogs.length, icon: Activity, color: "text-accent", bg: "bg-accent/10" },
-    { label: "Successful", value: aiLogs.filter((l) => l.status === "success").length, icon: CheckCircle, color: "text-success", bg: "bg-success/10" },
-    { label: "Failed", value: aiLogs.filter((l) => l.status === "error").length, icon: XCircle, color: "text-danger", bg: "bg-danger/10" },
-    { label: "Flagged", value: aiLogs.filter((l) => l.status === "flagged").length, icon: AlertTriangle, color: "text-warning", bg: "bg-warning/10" },
+    {
+      label: "Total Requests",
+      value: aiLogs.length,
+      icon: <Activity className="w-4 h-4" />,
+      iconClassName: "bg-accent/10 text-accent",
+    },
+    {
+      label: "Successful",
+      value: aiLogs.filter((l) => l.status === "success").length,
+      icon: <CheckCircle className="w-4 h-4" />,
+      iconClassName: "bg-success/10 text-success",
+    },
+    {
+      label: "Failed",
+      value: aiLogs.filter((l) => l.status === "error").length,
+      icon: <XCircle className="w-4 h-4" />,
+      iconClassName: "bg-danger/10 text-danger",
+    },
+    {
+      label: "Flagged",
+      value: aiLogs.filter((l) => l.status === "flagged").length,
+      icon: <AlertTriangle className="w-4 h-4" />,
+      iconClassName: "bg-warning/10 text-warning",
+    },
   ];
 
   if (isLoading) {
@@ -65,36 +87,32 @@ export default function AILogsPage() {
 
   return (
     <div className="space-y-8 lg:space-y-10">
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">AI Request Logs</h1>
-        <p className="text-sm text-muted mt-0.5">Monitor all AI processing requests for debugging and compliance</p>
-      </div>
+      <PageHeader
+        title="AI Request Logs"
+        description="Monitor AI processing requests for debugging and compliance."
+      />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {summaryCards.map((s) => (
-          <div key={s.label} className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <div className="flex items-center gap-3.5">
-              <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", s.bg)}>
-                <s.icon className={cn("w-5 h-5", s.color)} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs text-muted font-medium uppercase tracking-wide truncate">{s.label}</p>
-                <p className="text-xl lg:text-2xl font-bold text-heading leading-tight">{s.value}</p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            key={s.label}
+            label={s.label}
+            value={s.value}
+            icon={s.icon}
+            iconClassName={s.iconClassName}
+          />
         ))}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted pointer-events-none" />
           <input
             type="text"
             placeholder="Search by user or destination..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-background-primary border border-border rounded-xl text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
+            className="w-full pl-9 pr-4 py-2 bg-button-secondary border border-border-light rounded-xl text-sm text-heading placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/30"
           />
         </div>
         <div className="flex items-center gap-2 overflow-x-auto">
@@ -182,7 +200,7 @@ export default function AILogsPage() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
           <div className="bg-white rounded-2xl border border-border-light/50 w-full max-w-lg max-h-[80vh] overflow-y-auto p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-serif font-bold text-heading">Request Detail</h2>
+              <h2 className="text-base font-semibold text-heading">Request Detail</h2>
               <button onClick={() => setSelected(null)} className="text-muted hover:text-heading"><X className="w-5 h-5" /></button>
             </div>
             <div className="space-y-3 text-sm">

@@ -129,9 +129,23 @@ export interface GeneratedPlan {
   vaccinations: string[];
   healthAlerts: string[];
   safetyAdvisories: string[];
-  status: "active" | "flagged" | "archived" | "deleted";
+  planJson?: string;
+  status: "active" | "processing" | "failed" | "flagged" | "archived" | "deleted";
   createdAt: string;
   creditUsed: boolean;
+}
+
+export interface PlanGenerationContext {
+  id: string;
+  title: string;
+  sourceType: string;
+  fileName: string;
+  contentType: string;
+  storagePath: string;
+  synthesizedText: string;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Analytics
@@ -142,10 +156,29 @@ export interface DashboardStats {
   totalCreditsConsumed: number;
   aiRequestsToday: number;
   revenueOverview: number;
+  revenueBaseCurrency: string;
   failedAICalls: number;
   systemHealthStatus: "healthy" | "degraded" | "down";
   activeUsersToday: number;
   newUsersThisWeek: number;
+  /** Active travel plans in the system */
+  totalTravelPlans?: number;
+  /** Suspended (soft-deleted) user accounts */
+  suspendedUsers?: number;
+  /** Invoices not yet paid */
+  pendingInvoicesCount?: number;
+  /** Active employee records */
+  totalEmployees?: number;
+  /** Abuse flags awaiting review */
+  unresolvedAbuseFlags?: number;
+  /** AI request logs in the last 7 days */
+  aiRequestsLast7Days?: number;
+  /** Share of successful AI calls in the last 30 days (0–100) */
+  aiSuccessRateLast30Days?: number;
+  /** Tokens used on AI logs since midnight (server time) */
+  tokensUsedToday?: number;
+  /** AI logs with error status in the last 7 days */
+  failedAiCallsLast7Days?: number;
 }
 
 export interface AnalyticsData {
@@ -185,6 +218,10 @@ export interface SystemSettings {
   maintenanceMode: boolean;
   emailNotifications: boolean;
   maxEmployeesPerCompany: number;
+  revenueBaseCurrency: string;
+  exchangeRateNGN: number;
+  exchangeRateEUR: number;
+  exchangeRateGBP: number;
 }
 
 export interface SystemLog {

@@ -16,6 +16,8 @@ import AdminUsersPage from "../pages/admin-users/AdminUsersPage";
 import SystemStatusPage from "../pages/system/SystemStatusPage";
 import SystemLogsPage from "../pages/system/SystemLogsPage";
 import SystemSettingsPage from "../pages/system/SystemSettingsPage";
+import AbusePage from "../pages/settings/AbusePage";
+import PlanContextsPage from "../pages/settings/PlanContextsPage";
 
 export const router = createBrowserRouter([
   {
@@ -68,6 +70,8 @@ export const router = createBrowserRouter([
           { path: "system/status", element: <SystemStatusPage /> },
           { path: "system/logs", element: <SystemLogsPage /> },
           { path: "system/settings", element: <SystemSettingsPage /> },
+          { path: "abuse", element: <AbusePage /> },
+          { path: "plan-contexts", element: <PlanContextsPage /> },
 
           /* Billing */
           { path: "billing", element: <BillingPage /> },
@@ -85,7 +89,7 @@ export const router = createBrowserRouter([
             element: (
               <div className="flex items-center justify-center h-64">
                 <div className="text-center">
-                  <h1 className="text-4xl font-serif font-bold text-heading mb-2">404</h1>
+                  <h1 className="text-4xl font-serif text-heading mb-2">404</h1>
                   <p className="text-muted">Page not found</p>
                 </div>
               </div>

@@ -13,6 +13,7 @@ import {
   Power,
   LucideLoader2,
 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
 import { cn } from "../../lib/utils";
 import { useSystemStatus, useSystemLogs, useSystemSettings, useToggleMaintenanceMode } from "../../api/hooks";
 import type { SystemLog } from "../../api/types";
@@ -129,18 +130,18 @@ export default function SystemStatusPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">System Status</h1>
-          <p className="text-sm text-muted">Monitor platform health and service availability</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {healthIcon(statusData?.status ?? "healthy")}
-          <span className="text-sm font-semibold text-heading capitalize">
-            {statusData?.status ?? "healthy"}
-          </span>
-        </div>
-      </div>
+      <PageHeader
+        title="System Status"
+        description="Monitor platform health and service availability."
+        actions={
+          <div className="flex items-center gap-2">
+            {healthIcon(statusData?.status ?? "healthy")}
+            <span className="text-sm font-semibold text-heading capitalize">
+              {statusData?.status ?? "healthy"}
+            </span>
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">

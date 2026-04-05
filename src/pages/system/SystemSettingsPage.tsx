@@ -7,6 +7,7 @@ import {
   HeadphonesIcon,
   LucideLoader2,
 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
 import { cn } from "../../lib/utils";
 import { useSystemSettings, useUpdateSystemSettings, useToggleMaintenanceMode } from "../../api/hooks";
 import { useAdminAuthStore } from "../../stores/adminAuthStore";
@@ -20,6 +21,10 @@ interface SystemSettingsData {
   maxEmployeesPerCompany: number;
   planGenerationLimit: number;
   globalDisclaimer: string;
+  revenueBaseCurrency: string;
+  exchangeRateNGN: number;
+  exchangeRateEUR: number;
+  exchangeRateGBP: number;
 }
 
 const defaultSettings: SystemSettingsData = {
@@ -31,6 +36,10 @@ const defaultSettings: SystemSettingsData = {
   maxEmployeesPerCompany: 50,
   planGenerationLimit: 10,
   globalDisclaimer: "",
+  revenueBaseCurrency: "USD",
+  exchangeRateNGN: 0.00065,
+  exchangeRateEUR: 1.08,
+  exchangeRateGBP: 1.27,
 };
 
 export default function SystemSettingsPage() {
@@ -53,6 +62,10 @@ export default function SystemSettingsPage() {
         maxEmployeesPerCompany: (settingsData as any).maxEmployeesPerCompany ?? 50,
         planGenerationLimit: (settingsData as any).planGenerationLimit ?? 10,
         globalDisclaimer: (settingsData as any).globalDisclaimer ?? "",
+        revenueBaseCurrency: (settingsData as any).revenueBaseCurrency ?? "USD",
+        exchangeRateNGN: (settingsData as any).exchangeRateNGN ?? 0.00065,
+        exchangeRateEUR: (settingsData as any).exchangeRateEUR ?? 1.08,
+        exchangeRateGBP: (settingsData as any).exchangeRateGBP ?? 1.27,
       });
     }
   }, [settingsData]);
@@ -77,6 +90,10 @@ export default function SystemSettingsPage() {
         maxEmployeesPerCompany: (settingsData as any).maxEmployeesPerCompany ?? 50,
         planGenerationLimit: (settingsData as any).planGenerationLimit ?? 10,
         globalDisclaimer: (settingsData as any).globalDisclaimer ?? "",
+        revenueBaseCurrency: (settingsData as any).revenueBaseCurrency ?? "USD",
+        exchangeRateNGN: (settingsData as any).exchangeRateNGN ?? 0.00065,
+        exchangeRateEUR: (settingsData as any).exchangeRateEUR ?? 1.08,
+        exchangeRateGBP: (settingsData as any).exchangeRateGBP ?? 1.27,
       });
     }
   };
@@ -123,10 +140,10 @@ export default function SystemSettingsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">System Settings</h1>
-        <p className="text-sm text-muted">Configure platform defaults and system behavior</p>
-      </div>
+      <PageHeader
+        title="System settings"
+        description="Configure platform defaults and system behavior."
+      />
 
       <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 space-y-4">
         <h3 className="text-sm font-semibold text-heading">Credit Defaults</h3>
@@ -244,6 +261,69 @@ export default function SystemSettingsPage() {
             }
             className="w-full max-w-xs px-3 py-2 bg-background-secondary border border-border rounded-lg text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 space-y-4">
+        <div>
+          <h3 className="text-sm font-semibold text-heading">Currency Configuration</h3>
+          <p className="text-xs text-muted mt-0.5">
+            Set the base currency for revenue reporting. Exchange rates convert foreign currency invoices into the base currency.
+            Rates are expressed as: 1 unit of that currency = X {form.revenueBaseCurrency || "USD"}.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="text-xs text-muted block mb-1">Base Currency</label>
+            <select
+              value={form.revenueBaseCurrency}
+              onChange={(e) => setForm({ ...form, revenueBaseCurrency: e.target.value })}
+              className="w-full px-3 py-2 bg-background-secondary border border-border rounded-lg text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
+            >
+              <option value="USD">USD — US Dollar ($)</option>
+              <option value="NGN">NGN — Nigerian Naira (₦)</option>
+              <option value="EUR">EUR — Euro (€)</option>
+              <option value="GBP">GBP — British Pound (£)</option>
+            </select>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-border-light">
+          <div>
+            <label className="text-xs text-muted block mb-1">NGN → {form.revenueBaseCurrency || "USD"} rate</label>
+            <input
+              type="number"
+              step="0.000001"
+              min="0"
+              value={form.exchangeRateNGN}
+              onChange={(e) => setForm({ ...form, exchangeRateNGN: Number(e.target.value) })}
+              className="w-full px-3 py-2 bg-background-secondary border border-border rounded-lg text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
+              placeholder="e.g. 0.00065"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted block mb-1">EUR → {form.revenueBaseCurrency || "USD"} rate</label>
+            <input
+              type="number"
+              step="0.0001"
+              min="0"
+              value={form.exchangeRateEUR}
+              onChange={(e) => setForm({ ...form, exchangeRateEUR: Number(e.target.value) })}
+              className="w-full px-3 py-2 bg-background-secondary border border-border rounded-lg text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
+              placeholder="e.g. 1.08"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted block mb-1">GBP → {form.revenueBaseCurrency || "USD"} rate</label>
+            <input
+              type="number"
+              step="0.0001"
+              min="0"
+              value={form.exchangeRateGBP}
+              onChange={(e) => setForm({ ...form, exchangeRateGBP: Number(e.target.value) })}
+              className="w-full px-3 py-2 bg-background-secondary border border-border rounded-lg text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
+              placeholder="e.g. 1.27"
+            />
+          </div>
         </div>
       </div>
 

@@ -5,11 +5,23 @@ import {
   PieChart, Pie, Cell, AreaChart, Area, CartesianGrid, LineChart, Line, Legend,
 } from "recharts";
 import { BarChart3, Users, Globe, CreditCard, DollarSign, LucideLoader2 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
 import { cn } from "../../lib/utils";
-import { useAnalytics, useDashboardStats, useInvoices } from "../../api/hooks";
-import type { AnalyticsData, DashboardStats, Invoice } from "../../api/types";
+import { useAnalytics, useDashboardStats, useInvoices, useSystemSettings } from "../../api/hooks";
+import type { AnalyticsData, DashboardStats, Invoice, SystemSettings } from "../../api/types";
+import { convertInvoiceAmountToBase, getCurrencySymbol, sumInvoicesByCurrency } from "../../lib/currency";
 
 type TabKey = "overview" | "usage" | "destinations" | "credits" | "revenue";
+
+const defaultReportingSettings: Pick<
+  SystemSettings,
+  "revenueBaseCurrency" | "exchangeRateNGN" | "exchangeRateEUR" | "exchangeRateGBP"
+> = {
+  revenueBaseCurrency: "USD",
+  exchangeRateNGN: 0,
+  exchangeRateEUR: 0,
+  exchangeRateGBP: 0,
+};
 
 const TABS: { key: TabKey; label: string; path: string; icon: React.ElementType }[] = [
   { key: "overview", label: "Overview", path: "/admin/analytics", icon: BarChart3 },
@@ -26,12 +38,14 @@ const tooltipStyle: React.CSSProperties = {
   border: "1px solid #e8ddd3",
   backgroundColor: "#fcf6ef",
   fontSize: 12,
+  fontFamily: "'Hanken Grotesk', system-ui, sans-serif",
 };
 
 export default function AnalyticsPage() {
   const { data: analyticsData, isLoading: analyticsLoading } = useAnalytics();
   const { data: statsData, isLoading: statsLoading } = useDashboardStats();
   const { data: invoicesData, isLoading: invoicesLoading } = useInvoices();
+  const { data: settingsData, isLoading: settingsLoading } = useSystemSettings();
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedRevTab, setSelectedRevTab] = useState<"monthly" | "plan" | "method">("monthly");
@@ -53,6 +67,7 @@ export default function AnalyticsPage() {
     totalCreditsConsumed: 0,
     aiRequestsToday: 0,
     revenueOverview: 0,
+    revenueBaseCurrency: "USD",
     failedAICalls: 0,
     systemHealthStatus: "healthy",
     activeUsersToday: 0,
@@ -60,8 +75,19 @@ export default function AnalyticsPage() {
   };
 
   const invoices: Invoice[] = invoicesData ?? [];
+  const reportingSettings: Pick<
+    SystemSettings,
+    "revenueBaseCurrency" | "exchangeRateNGN" | "exchangeRateEUR" | "exchangeRateGBP"
+  > = settingsData
+    ? {
+        revenueBaseCurrency: settingsData.revenueBaseCurrency ?? defaultReportingSettings.revenueBaseCurrency,
+        exchangeRateNGN: settingsData.exchangeRateNGN ?? defaultReportingSettings.exchangeRateNGN,
+        exchangeRateEUR: settingsData.exchangeRateEUR ?? defaultReportingSettings.exchangeRateEUR,
+        exchangeRateGBP: settingsData.exchangeRateGBP ?? defaultReportingSettings.exchangeRateGBP,
+      }
+    : defaultReportingSettings;
 
-  const isLoading = analyticsLoading || statsLoading || invoicesLoading;
+  const isLoading = analyticsLoading || statsLoading || invoicesLoading || settingsLoading;
 
   const activeTab: TabKey = (() => {
     const p = location.pathname;
@@ -89,17 +115,22 @@ export default function AnalyticsPage() {
   ];
 
   const paidInvoices = invoices.filter((i) => i.status === "paid");
-  const totalRevenue = paidInvoices.reduce((s, i) => s + i.amount, 0);
+  const paidByCurrency = sumInvoicesByCurrency(paidInvoices);
+  const reportingSym = getCurrencySymbol(stats.revenueBaseCurrency);
+  const totalRevenueReporting = paidInvoices.reduce(
+    (s, i) => s + convertInvoiceAmountToBase(i.amount, i.currency, reportingSettings),
+    0,
+  );
   const paymentMethods = paidInvoices.reduce<Record<string, number>>((acc, i) => {
     const m = i.paymentMethod ?? "Unknown";
-    acc[m] = (acc[m] || 0) + i.amount;
+    acc[m] = (acc[m] || 0) + convertInvoiceAmountToBase(i.amount, i.currency, reportingSettings);
     return acc;
   }, {});
   const paymentMethodData = Object.entries(paymentMethods).map(([name, value]) => ({ name, value }));
 
   const planTypeRevenue = paidInvoices.reduce<Record<string, number>>((acc, i) => {
     const type = i.companyId ? "Corporate" : "Individual";
-    acc[type] = (acc[type] || 0) + i.amount;
+    acc[type] = (acc[type] || 0) + convertInvoiceAmountToBase(i.amount, i.currency, reportingSettings);
     return acc;
   }, {});
   const planTypeData = Object.entries(planTypeRevenue).map(([name, value]) => ({ name, value }));
@@ -114,10 +145,10 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-8 lg:space-y-10">
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">Analytics & Metrics</h1>
-        <p className="text-sm text-muted mt-0.5">Usage patterns, trends, and platform insights</p>
-      </div>
+      <PageHeader
+        title="Analytics & Metrics"
+        description="Usage patterns, trends, and platform insights."
+      />
 
       <div className="flex items-center gap-2 overflow-x-auto">
         {TABS.map((tab) => (
@@ -159,7 +190,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-              <h3 className="text-sm font-serif font-bold text-heading mb-5">Monthly Request Volume</h3>
+              <h3 className="text-base font-semibold text-heading mb-5">Monthly Request Volume</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={analytics.monthlyRequests}>
@@ -173,7 +204,7 @@ export default function AnalyticsPage() {
               </div>
             </div>
             <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-              <h3 className="text-sm font-serif font-bold text-heading mb-5">Corporate vs Individual</h3>
+              <h3 className="text-base font-semibold text-heading mb-5">Corporate vs Individual</h3>
               <div className="h-64 flex items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -200,7 +231,7 @@ export default function AnalyticsPage() {
       {activeTab === "usage" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h3 className="text-sm font-serif font-bold text-heading mb-5">Peak Usage Hours</h3>
+            <h3 className="text-base font-semibold text-heading mb-5">Peak Usage Hours</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={analytics.peakUsageTimes}>
@@ -214,7 +245,7 @@ export default function AnalyticsPage() {
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h3 className="text-sm font-serif font-bold text-heading mb-5">Daily Active Users</h3>
+            <h3 className="text-base font-semibold text-heading mb-5">Daily Active Users</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={analytics.dailyActiveUsers}>
@@ -228,7 +259,7 @@ export default function AnalyticsPage() {
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 lg:col-span-2">
-            <h3 className="text-sm font-serif font-bold text-heading mb-5">Requests per Model</h3>
+            <h3 className="text-base font-semibold text-heading mb-5">Requests per Model</h3>
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={modelData}>
@@ -247,7 +278,7 @@ export default function AnalyticsPage() {
       {activeTab === "destinations" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h3 className="text-sm font-serif font-bold text-heading mb-5">Top Destinations</h3>
+            <h3 className="text-base font-semibold text-heading mb-5">Top Destinations</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={analytics.topDestinations?.slice(0, 8) ?? []} layout="vertical" margin={{ left: 4, right: 16 }}>
@@ -261,7 +292,7 @@ export default function AnalyticsPage() {
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h3 className="text-sm font-serif font-bold text-heading mb-5">Destination Risk Distribution</h3>
+            <h3 className="text-base font-semibold text-heading mb-5">Destination Risk Distribution</h3>
             <div className="h-72 flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -293,7 +324,7 @@ export default function AnalyticsPage() {
       {activeTab === "credits" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h3 className="text-sm font-serif font-bold text-heading mb-5">Credit Usage by Type</h3>
+            <h3 className="text-base font-semibold text-heading mb-5">Credit Usage by Type</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={analytics.creditUsageByType ?? []}>
@@ -309,7 +340,7 @@ export default function AnalyticsPage() {
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h3 className="text-sm font-serif font-bold text-heading mb-5">Credit Consumption Trend</h3>
+            <h3 className="text-base font-semibold text-heading mb-5">Credit Consumption Trend</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={analytics.monthlyRequests ?? []}>
@@ -329,8 +360,24 @@ export default function AnalyticsPage() {
         <div className="space-y-8">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-              <p className="text-xs text-muted font-medium uppercase tracking-wide">Total Revenue</p>
-              <p className="text-xl lg:text-2xl font-bold text-heading mt-1">₦{totalRevenue.toLocaleString()}</p>
+              <p className="text-xs text-muted font-medium uppercase tracking-wide">Paid revenue</p>
+              <div className="mt-2 space-y-2">
+                {paidByCurrency.size === 0 ?
+                  <p className="text-xl font-bold text-heading">—</p>
+                : Array.from(paidByCurrency.entries())
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([c, total]) => (
+                      <p key={c} className="text-lg font-bold text-heading tabular-nums">
+                        {getCurrencySymbol(c)}
+                        {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                        <span className="text-sm font-normal text-muted ml-1.5">{c}</span>
+                      </p>
+                    ))}
+                <p className="text-xs text-muted pt-1 border-t border-border-light/50">
+                  Reporting ({stats.revenueBaseCurrency ?? "USD"}): {reportingSym}
+                  {totalRevenueReporting.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                </p>
+              </div>
             </div>
             <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
               <p className="text-xs text-muted font-medium uppercase tracking-wide">Invoices Paid</p>
@@ -358,14 +405,22 @@ export default function AnalyticsPage() {
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
             {selectedRevTab === "monthly" && (
               <>
-                <h3 className="text-sm font-serif font-bold text-heading mb-5">Monthly Revenue</h3>
+                <h3 className="text-base font-semibold text-heading mb-1">Monthly revenue</h3>
+                <p className="text-xs text-muted mb-5">
+                  Converted to reporting currency ({stats.revenueBaseCurrency ?? "USD"}) using System settings exchange rates.
+                </p>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={analytics.monthlyRequests ?? []}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e8ddd3" />
                       <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#7a6a5a" }} stroke="#d4c4b4" tickLine={false} />
                       <YAxis tick={{ fontSize: 11, fill: "#7a6a5a" }} stroke="#d4c4b4" tickLine={false} />
-                      <Tooltip contentStyle={tooltipStyle} />
+                      <Tooltip
+                        contentStyle={tooltipStyle}
+                        formatter={(value: number | undefined) =>
+                          `${reportingSym}${Number(value ?? 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+                        }
+                      />
                       <Area type="monotone" dataKey="revenue" fill="#c4953a" fillOpacity={0.15} stroke="#c4953a" strokeWidth={2.5} />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -374,14 +429,22 @@ export default function AnalyticsPage() {
             )}
             {selectedRevTab === "plan" && (
               <>
-                <h3 className="text-sm font-serif font-bold text-heading mb-5">Revenue by Plan Type</h3>
+                <h3 className="text-base font-semibold text-heading mb-1">Revenue by plan type</h3>
+                <p className="text-xs text-muted mb-5">
+                  Paid invoices, converted to {stats.revenueBaseCurrency ?? "USD"}.
+                </p>
                 <div className="h-64 flex items-center justify-center">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={planTypeData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4} dataKey="value">
                         {planTypeData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i]} />)}
                       </Pie>
-                      <Tooltip contentStyle={tooltipStyle} />
+                      <Tooltip
+                        contentStyle={tooltipStyle}
+                        formatter={(value: number | undefined) =>
+                          `${reportingSym}${Number(value ?? 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+                        }
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
@@ -389,7 +452,10 @@ export default function AnalyticsPage() {
                   {planTypeData.map((d, i) => (
                     <div key={d.name} className="flex items-center gap-2 text-sm">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: CHART_COLORS[i] }} />
-                      <span className="text-body">{d.name}: ₦{d.value.toLocaleString()}</span>
+                      <span className="text-body">
+                        {d.name}: {reportingSym}
+                        {d.value.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -397,14 +463,22 @@ export default function AnalyticsPage() {
             )}
             {selectedRevTab === "method" && (
               <>
-                <h3 className="text-sm font-serif font-bold text-heading mb-5">Payment Method Breakdown</h3>
+                <h3 className="text-base font-semibold text-heading mb-1">Payment method breakdown</h3>
+                <p className="text-xs text-muted mb-5">
+                  Paid amounts converted to {stats.revenueBaseCurrency ?? "USD"}.
+                </p>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={paymentMethodData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e8ddd3" />
                       <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#7a6a5a" }} stroke="#d4c4b4" tickLine={false} />
                       <YAxis tick={{ fontSize: 11, fill: "#7a6a5a" }} stroke="#d4c4b4" tickLine={false} />
-                      <Tooltip contentStyle={tooltipStyle} formatter={(value) => `₦${Number(value ?? 0).toLocaleString()}`} />
+                      <Tooltip
+                        contentStyle={tooltipStyle}
+                        formatter={(value: number | undefined) =>
+                          `${reportingSym}${Number(value ?? 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+                        }
+                      />
                       <Bar dataKey="value" fill="#2a7a6a" radius={[6, 6, 0, 0]} barSize={40} />
                     </BarChart>
                   </ResponsiveContainer>

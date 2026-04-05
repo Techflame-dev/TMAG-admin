@@ -185,7 +185,7 @@ export default function UserDetailPage() {
               </div>
               <div className="flex-1 space-y-3">
                 <div>
-                  <h1 className="text-xl font-serif font-bold text-heading">{user.name}</h1>
+                  <h1 className="text-xl font-serif text-heading">{user.name}</h1>
                   <div className="flex flex-wrap items-center gap-3 mt-1.5">
                     <span
                       className={cn(
@@ -303,7 +303,7 @@ export default function UserDetailPage() {
 
       {activeTab === "edit" && (
         <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 max-w-2xl">
-          <h2 className="text-lg font-serif font-bold text-heading mb-5">Edit User</h2>
+          <h2 className="text-base font-semibold text-heading mb-5">Edit User</h2>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-body mb-1">Name</label>
@@ -367,7 +367,7 @@ export default function UserDetailPage() {
       {activeTab === "credits" && (
         <div className="space-y-6 max-w-2xl">
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h2 className="text-lg font-serif font-bold text-heading mb-4">Current Credits</h2>
+            <h2 className="text-base font-semibold text-heading mb-4">Current Credits</h2>
             <div className="flex items-center gap-6">
               <div>
                 <p className="text-3xl font-bold font-serif text-accent">
@@ -389,7 +389,7 @@ export default function UserDetailPage() {
           </div>
 
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h2 className="text-lg font-serif font-bold text-heading mb-4">
+            <h2 className="text-base font-semibold text-heading mb-4">
               Adjust Credits
             </h2>
             <div className="space-y-4">
@@ -433,7 +433,7 @@ export default function UserDetailPage() {
           </div>
 
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h2 className="text-lg font-serif font-bold text-heading mb-4">
+            <h2 className="text-base font-semibold text-heading mb-4">
               Recent Credit Movements
             </h2>
             {recentLedger.length === 0 ? (
@@ -477,7 +477,7 @@ export default function UserDetailPage() {
 
       {activeTab === "ledger" && (
         <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-          <h2 className="text-lg font-serif font-bold text-heading mb-4">
+          <h2 className="text-base font-semibold text-heading mb-4">
             Credit Ledger ({userLedger.length})
           </h2>
           {userLedger.length === 0 ? (
@@ -536,7 +536,7 @@ export default function UserDetailPage() {
 
       {activeTab === "plans" && (
         <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-          <h2 className="text-lg font-serif font-bold text-heading mb-4">
+          <h2 className="text-base font-semibold text-heading mb-4">
             Generated Plans ({userPlans.length})
           </h2>
           {userPlans.length === 0 ? (

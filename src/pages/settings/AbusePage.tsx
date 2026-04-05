@@ -1,4 +1,5 @@
 import { AlertTriangle, CheckCircle, Clock, Shield, LucideLoader2 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
 import { cn } from "../../lib/utils";
 import { useAbuseFlags, useResolveAbuseFlag, useUsers, useSuspendUser } from "../../api/hooks";
 import type { AbuseFlag } from "../../api/types";
@@ -34,10 +35,10 @@ export default function AbusePage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">Abuse Detection</h1>
-        <p className="text-sm text-muted">Monitor and respond to platform abuse flags</p>
-      </div>
+      <PageHeader
+        title="Abuse detection"
+        description="Monitor and respond to platform abuse flags."
+      />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
@@ -52,7 +53,7 @@ export default function AbusePage() {
             </div>
             <div>
               <p className="text-xs text-muted uppercase tracking-wide">{s.label}</p>
-              <p className="text-xl font-bold text-heading">{s.value}</p>
+              <p className="text-2xl font-serif text-heading tabular-nums">{s.value}</p>
             </div>
           </div>
         ))}

@@ -14,6 +14,8 @@ import {
   User,
   LucideLoader2,
 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
+import StatCard from "../../components/StatCard";
 import { cn } from "../../lib/utils";
 import { useUsers, useSuspendUser, useActivateUser, useResetUserCredits } from "../../api/hooks";
 import type { ManagedUser } from "../../api/types";
@@ -50,11 +52,36 @@ export default function UsersPage() {
   const individualUsers = users.filter((u) => u.planType === "individual").length;
 
   const stats = [
-    { label: "Total Users", value: totalUsers, icon: Users, color: "text-accent" },
-    { label: "Active", value: activeUsers, icon: UserCheck, color: "text-success" },
-    { label: "Suspended", value: suspendedUsers, icon: UserX, color: "text-danger" },
-    { label: "Corporate", value: corporateUsers, icon: Building2, color: "text-info" },
-    { label: "Individual", value: individualUsers, icon: User, color: "text-brand-muted" },
+    {
+      label: "Total Users",
+      value: totalUsers,
+      icon: <Users className="w-4 h-4" />,
+      iconClassName: "bg-accent/10 text-accent",
+    },
+    {
+      label: "Active",
+      value: activeUsers,
+      icon: <UserCheck className="w-4 h-4" />,
+      iconClassName: "bg-success/10 text-success",
+    },
+    {
+      label: "Suspended",
+      value: suspendedUsers,
+      icon: <UserX className="w-4 h-4" />,
+      iconClassName: "bg-danger/10 text-danger",
+    },
+    {
+      label: "Corporate",
+      value: corporateUsers,
+      icon: <Building2 className="w-4 h-4" />,
+      iconClassName: "bg-info/10 text-info",
+    },
+    {
+      label: "Individual",
+      value: individualUsers,
+      icon: <User className="w-4 h-4" />,
+      iconClassName: "bg-button-secondary text-heading",
+    },
   ];
 
   const handleSuspend = (userId: string) => {
@@ -82,37 +109,37 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <h1 className="text-xl lg:text-2xl font-serif font-bold text-heading">User Management</h1>
-        <span className="px-2.5 py-0.5 rounded-xl text-xs font-medium bg-accent/10 text-accent">
-          {totalUsers} users
-        </span>
-      </div>
+      <PageHeader
+        title="User Management"
+        description="Search, filter, and manage platform accounts."
+        badge={
+          <span className="px-2.5 py-0.5 rounded-xl text-xs font-medium bg-accent/10 text-accent">
+            {totalUsers} users
+          </span>
+        }
+      />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {stats.map((s) => (
-          <div
+          <StatCard
             key={s.label}
-            className="bg-white rounded-2xl border border-border-light/50 p-5"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <s.icon className={cn("w-4 h-4", s.color)} />
-              <p className="text-xs text-muted">{s.label}</p>
-            </div>
-            <p className={cn("text-xl font-bold font-serif", s.color)}>{s.value}</p>
-          </div>
+            label={s.label}
+            value={s.value}
+            icon={s.icon}
+            iconClassName={s.iconClassName}
+          />
         ))}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted pointer-events-none" />
           <input
             type="text"
             placeholder="Search by name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-white border border-border-light/50 rounded-xl text-sm text-heading focus:outline-none focus:ring-2 focus:ring-accent/30"
+            className="w-full pl-9 pr-4 py-2 bg-button-secondary border border-border-light rounded-xl text-sm text-heading placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/30"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -152,15 +179,31 @@ export default function UsersPage() {
       <div className="bg-white rounded-2xl border border-border-light/50 overflow-x-auto">
         <table className="w-full text-sm min-w-[800px]">
           <thead>
-            <tr className="border-b border-border">
-              <th className="text-left p-4 text-muted font-medium">User</th>
-              <th className="text-left p-4 text-muted font-medium">Type</th>
-              <th className="text-left p-4 text-muted font-medium">Company</th>
-              <th className="text-left p-4 text-muted font-medium">Credits</th>
-              <th className="text-left p-4 text-muted font-medium">Plans</th>
-              <th className="text-left p-4 text-muted font-medium">Status</th>
-              <th className="text-left p-4 text-muted font-medium">Last Active</th>
-              <th className="text-left p-4 text-muted font-medium">Actions</th>
+            <tr className="border-b border-border-light/50">
+              <th className="text-left p-4 text-xs uppercase tracking-wide text-muted font-semibold">
+                User
+              </th>
+              <th className="text-left p-4 text-xs uppercase tracking-wide text-muted font-semibold">
+                Type
+              </th>
+              <th className="text-left p-4 text-xs uppercase tracking-wide text-muted font-semibold">
+                Company
+              </th>
+              <th className="text-left p-4 text-xs uppercase tracking-wide text-muted font-semibold">
+                Credits
+              </th>
+              <th className="text-left p-4 text-xs uppercase tracking-wide text-muted font-semibold">
+                Plans
+              </th>
+              <th className="text-left p-4 text-xs uppercase tracking-wide text-muted font-semibold">
+                Status
+              </th>
+              <th className="text-left p-4 text-xs uppercase tracking-wide text-muted font-semibold">
+                Last Active
+              </th>
+              <th className="text-left p-4 text-xs uppercase tracking-wide text-muted font-semibold">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -171,7 +214,7 @@ export default function UsersPage() {
               return (
                 <tr
                   key={user.id}
-                  className="border-b border-border-light hover:bg-background-primary transition-colors duration-150"
+                  className="border-b border-border-light/50 hover:bg-background-secondary/50 transition-colors duration-150"
                 >
                   <td className="p-4">
                     <div>

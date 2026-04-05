@@ -204,7 +204,7 @@ export default function CompanyDetailPage() {
               </div>
               <div className="flex-1 space-y-3">
                 <div>
-                  <h1 className="text-xl font-serif font-bold text-heading">
+                  <h1 className="text-xl font-serif text-heading">
                     {company.name}
                   </h1>
                   <div className="flex flex-wrap items-center gap-3 mt-1.5">
@@ -331,7 +331,7 @@ export default function CompanyDetailPage() {
 
       {activeTab === "edit" && (
         <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8 max-w-2xl">
-          <h2 className="text-lg font-serif font-bold text-heading mb-5">
+          <h2 className="text-base font-semibold text-heading mb-5">
             Edit Company
           </h2>
           <div className="space-y-4">
@@ -430,7 +430,7 @@ export default function CompanyDetailPage() {
       {activeTab === "credits" && (
         <div className="space-y-6 max-w-2xl">
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h2 className="text-lg font-serif font-bold text-heading mb-4">
+            <h2 className="text-base font-semibold text-heading mb-4">
               Current Balance
             </h2>
             <div className="flex items-center gap-6">
@@ -461,7 +461,7 @@ export default function CompanyDetailPage() {
           </div>
 
           <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-            <h2 className="text-lg font-serif font-bold text-heading mb-4">
+            <h2 className="text-base font-semibold text-heading mb-4">
               Adjust Credits
             </h2>
             <div className="space-y-4">
@@ -512,7 +512,7 @@ export default function CompanyDetailPage() {
 
       {activeTab === "ledger" && (
         <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-          <h2 className="text-lg font-serif font-bold text-heading mb-4">
+          <h2 className="text-base font-semibold text-heading mb-4">
             Credit Ledger ({companyLedger.length})
           </h2>
           {companyLedger.length === 0 ? (
@@ -573,7 +573,7 @@ export default function CompanyDetailPage() {
 
       {activeTab === "hr-admins" && (
         <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-          <h2 className="text-lg font-serif font-bold text-heading mb-4">
+          <h2 className="text-base font-semibold text-heading mb-4">
             HR Admins ({companyHrAdmins.length})
           </h2>
           {companyHrAdmins.length === 0 ? (
@@ -634,7 +634,7 @@ export default function CompanyDetailPage() {
 
       {activeTab === "employees" && (
         <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-          <h2 className="text-lg font-serif font-bold text-heading mb-4">
+          <h2 className="text-base font-semibold text-heading mb-4">
             Employees ({employees.length})
           </h2>
           {employees.length === 0 ? (
@@ -697,7 +697,7 @@ export default function CompanyDetailPage() {
 
       {activeTab === "plans" && (
         <div className="bg-white rounded-2xl border border-border-light/50 p-6 lg:p-8">
-          <h2 className="text-lg font-serif font-bold text-heading mb-4">
+          <h2 className="text-base font-semibold text-heading mb-4">
             Generated Plans ({companyPlans.length})
           </h2>
           {companyPlans.length === 0 ? (

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Shield, Users, X, LucideLoader2 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
 import { cn } from "../../lib/utils";
 import { useRoles, useAdminUsers } from "../../api/hooks";
 import type { AdminRole, AdminUser } from "../../api/types";
@@ -31,10 +32,10 @@ export default function RolesPage() {
 
   return (
     <div className="space-y-8 lg:space-y-10">
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-serif font-bold text-heading">Admin Roles</h1>
-        <p className="text-sm text-muted mt-0.5">Manage roles and permissions for admin users</p>
-      </div>
+      <PageHeader
+        title="Admin roles"
+        description="Manage roles and permissions for admin users."
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {roles.map((role) => (
@@ -51,7 +52,7 @@ export default function RolesPage() {
                 <Shield className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <h3 className="text-sm font-serif font-bold text-heading">{role.name}</h3>
+                <h3 className="text-base font-semibold text-heading">{role.name}</h3>
                 <div className="flex items-center gap-1 text-xs text-muted">
                   <Users className="w-3 h-3" />
                   <span>{role.userCount} user{role.userCount !== 1 ? "s" : ""}</span>
@@ -74,7 +75,7 @@ export default function RolesPage() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
           <div className="bg-white rounded-2xl border border-border-light/50 w-full max-w-lg max-h-[80vh] overflow-y-auto p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-serif font-bold text-heading">{detail.name}</h2>
+              <h2 className="text-base font-semibold text-heading">{detail.name}</h2>
               <button onClick={() => setSelected(null)} className="text-muted hover:text-heading"><X className="w-5 h-5" /></button>
             </div>
             <p className="text-sm text-body">{detail.description}</p>
